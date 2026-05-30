@@ -1,0 +1,12 @@
+# Geospatial Data / Shapefiles
+
+*.cpg
+*.CPG
+*.dbf
+*.DBF
+*.prj
+*.PRJ
+*.shp
+*.SHP
+*.shx
+*.SHX
