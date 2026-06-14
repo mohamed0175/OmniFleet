@@ -1,0 +1,171 @@
+{
+    admin 0.0.0.0:2019
+
+    servers {
+        protocols h1 h2
+    }
+
+    log {
+        output file /data/caddy/logs/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+        format json
+    }
+}
+
+ubuntu-server.tail712639.ts.net {
+
+    tls /certs/ubuntu-server.tail712639.ts.net.crt \
+        /certs/ubuntu-server.tail712639.ts.net.key
+
+    encode gzip zstd
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+
+    # --------------------------------------------------
+    # Health Check
+    # --------------------------------------------------
+
+    handle /health {
+        respond "ok" 200
+    }
+    
+    # --------------------------------------------------
+    # Portainer Smart Shortcuts (Bounces cleanly to Native SSL)
+    # --------------------------------------------------
+    redir /portainer  https://ubuntu-server.tail712639.ts.net:9443 302
+    redir /portainer/ https://ubuntu-server.tail712639.ts.net:9443 302
+
+    # --------------------------------------------------
+    # Grafana
+    # --------------------------------------------------
+    redir /grafana /grafana/ 302
+
+    handle /grafana* {
+        reverse_proxy grafana:3000
+    }
+
+    # --------------------------------------------------
+    # Apache Superset
+    # --------------------------------------------------
+
+    redir /superset  /superset/welcome/ 302
+    redir /superset/ /superset/welcome/ 302
+
+    handle /superset/* {
+        reverse_proxy superset:8088
+    }
+
+    # --------------------------------------------------
+    # Jupyter
+    # --------------------------------------------------
+
+    redir /jupyter /jupyter/ 302
+
+    handle /jupyter* {
+        reverse_proxy jupyter:8888 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+
+            flush_interval -1
+        }
+    }
+
+    # --------------------------------------------------
+    # MinIO Console
+    # Removes /minio prefix
+    # --------------------------------------------------
+    redir /minio /minio/ 302
+    
+    handle_path /minio/* {
+        reverse_proxy minio:9001
+    }
+
+    # --------------------------------------------------
+    # MinIO S3 API
+    # Removes /s3 prefix
+    # --------------------------------------------------
+    redir /s3 /s3/ 302
+
+    handle_path /s3* {
+        reverse_proxy minio:9000
+    }
+
+    # --------------------------------------------------
+    # pgAdmin
+    # --------------------------------------------------
+    redir /pgadmin /pgadmin/ 302
+
+    handle /pgadmin* {
+        reverse_proxy pgadmin:80
+    }
+
+    # --------------------------------------------------
+    # Kafka UI
+    # --------------------------------------------------
+    redir /kafka /kafka/ 302
+
+    handle /kafka* {
+        reverse_proxy kafka-ui:8080
+    }
+    
+    # --------------------------------------------------
+    # Schema Registry
+    # Removes /schema-registry prefix for the API
+    # --------------------------------------------------
+    redir /schema-registry /schema-registry/ 302
+
+    handle_path /schema-registry/* {
+        reverse_proxy schema-registry:8181
+    }
+
+    # --------------------------------------------------
+    # Spark Worker UI
+    # Removes /spark-worker prefix
+    # --------------------------------------------------
+    redir /spark-worker /spark-worker/ 302
+
+    handle_path /spark-worker/* {
+        reverse_proxy spark-worker:8081
+    }
+
+    # --------------------------------------------------
+    # Spark Master UI
+    # Removes /spark-master prefix
+    # --------------------------------------------------
+    redir /spark-master /spark-master/ 302
+
+    handle_path /spark-master/* {
+        reverse_proxy spark-master:8080
+    }
+    
+    # --------------------------------------------------
+    # Apache Airflow
+    # --------------------------------------------------
+    redir /airflow /airflow/ 302
+
+    handle /airflow* {
+        reverse_proxy airflow-webserver:8080 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+          header_up X-Forwarded-Host {host}
+        }
+    }
+    
+    # --------------------------------------------------
+    # Fallback → Superset
+    # --------------------------------------------------
+
+    handle {
+        reverse_proxy superset:8088
+    }
+}
