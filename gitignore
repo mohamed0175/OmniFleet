@@ -1,0 +1,106 @@
+# ── Caddy ────────────────────────────────────────────
+caddy/certs/
+
+# ── Spark / Jupyter ──────────────────────────────────
+spark/logs/
+notebooks/**/.ipynb_checkpoints/
+notebooks/test/
+
+# ── dbt ──────────────────────────────────────────────
+dbt/logs/
+dbt/target/
+dbt/dbt_packages/
+
+# ── Airflow ──────────────────────────────────────────
+airflow/logs/
+airflow/dags/__pycache__/
+airflow/plugins/__pycache__/
+
+# ── Runtime artefacts ────────────────────────────────
+jobs/
+strategy/
+profile/
+
+# ── Superset ─────────────────────────────────────────
+superset/superset_home/
+
+# ── Python ───────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.*
+!.env.example
+
+# ── OS / editor ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── Data files (columnar / binary) ───────────────────
+*.parquet
+*.avro
+*.orc
+*.arrow
+*.feather
+
+# ── Data files (flat / text) ─────────────────────────
+*.csv
+*.tsv
+*.jsonl
+*.ndjson
+
+# ── Archives & compressed ─────────────────────────────
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.gz
+*.bz2
+*.zst
+*.snappy
+*.lz4
+
+# ── Databases & checkpoints ──────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+*.h5
+*.hdf5
+
+# ── Spark local state ────────────────────────────────
+derby.log
+metastore_db/
+spark-warehouse/
+checkpoint/
+_spark_metadata/
+
+# ── Kafka local state ────────────────────────────────
+kafka-logs/
+__consumer_offsets/
+
+# ── ML / model artefacts ─────────────────────────────
+*.pkl
+*.pickle
+*.joblib
+*.pt
+*.pth
+*.onnx
+*.bin
+mlruns/
+mlartifacts/
+
+# ── Logs & profiling ─────────────────────────────────
+*.log
+*.out
+*.err
+*.prof
+*.perf
+logs/
+tmp/
+temp/
