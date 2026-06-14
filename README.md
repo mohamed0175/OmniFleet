@@ -4,9 +4,7 @@
 |---|---|
 | **Project** | Omnifleet — Single-Node Lakehouse / Streaming Analytics Platform |
 | **Orchestration** | Docker Compose (single host) |
-| **Document scope** | `docker-compose.yml`, `Caddyfile`, `spark-defaults.conf`, `log4j2.properties`, `datasources.yml`, `init-buckets.sh`, `001-schemas.sql`, `init-superset.sh`, `requirements_jupyter.txt`, `start-jupyter.sh`, `superset_config.py` |
 | **Access** | Private Tailscale network — `https://ubuntu-server.tail712639.ts.net` |
-| **Status** | Stable, tested, in production use |
 
 This document describes the platform exactly as configured. No configuration was modified during this review — it is a read-only architectural reference.
 
